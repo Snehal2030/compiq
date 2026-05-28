@@ -3,53 +3,54 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL")
 }
 
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  name          String
-  passwordHash  String
-  createdAt     DateTime  @default(now())
-  salaries      Salary[]
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime @default(now())
+  salaries     Salary[]
 }
 
 model Company {
-  id            String    @id @default(cuid())
-  name          String    @unique
+  id             String   @id @default(cuid())
+  name           String   @unique
   normalizedName String   @unique
-  logoUrl       String?
-  industry      String?
-  website       String?
-  createdAt     DateTime  @default(now())
-  salaries      Salary[]
+  logoUrl        String?
+  industry       String?
+  website        String?
+  createdAt      DateTime @default(now())
+  salaries       Salary[]
 }
 
 model Salary {
-  id              String    @id @default(cuid())
+  id              String   @id @default(cuid())
   userId          String?
-  user            User?     @relation(fields: [userId], references: [id])
+  user            User?    @relation(fields: [userId], references: [id])
   companyId       String
-  company         Company   @relation(fields: [companyId], references: [id])
+  company         Company  @relation(fields: [companyId], references: [id])
   jobTitle        String
-  level           String    // L1, L2, L3, SDE-1, Senior, Staff, Principal, etc.
-  levelOrder      Int       // numeric for sorting (1-10)
+  level           String
+  levelOrder      Int
   baseSalary      Float
-  bonus           Float     @default(0)
-  stockPerYear    Float     @default(0)
-  totalComp       Float     // computed: base + bonus + stock
-  currency        String    @default("INR")
+  bonus           Float    @default(0)
+  stockPerYear    Float    @default(0)
+  totalComp       Float
+  currency        String   @default("INR")
   location        String
   city            String
-  country         String    @default("India")
+  country         String   @default("India")
   yearsExperience Int
-  yearsAtCompany  Int       @default(0)
+  yearsAtCompany  Int      @default(0)
   education       String?
-  department      String?   // Engineering, Product, Design, etc.
-  verified        Boolean   @default(false)
-  submittedAt     DateTime  @default(now())
+  department      String?
+  verified        Boolean  @default(false)
+  submittedAt     DateTime @default(now())
   tags            String[]
 
   @@index([companyId])
